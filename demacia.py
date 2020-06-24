@@ -40,7 +40,7 @@ def pro():
         ptime = request.form['ptime']
         pnickname = request.form['pnickname']
 
-        sql= """UPDATE member SET teer='%s', line='%s',gender= '%s',mic= '%s', playtime= '%s', pnickname= '%s'
+        sql= """UPDATE usertbl SET teer='%s', line='%s',gender= '%s',mic= '%s', playtime= '%s', pnickname= '%s'
          WHERE user_id='%s' """ % (teer,line,gender,mic,ptime,pnickname,session['user'])
           
 
@@ -63,7 +63,7 @@ def login():
         password = request.form['password'].encode('utf-8')
     
         cursor = conn.cursor()
-        cursor.execute("SELECT user_id FROM member WHERE user_id = '"+email+"'")
+        cursor.execute("SELECT email FROM usertbl WHERE email = '"+email+"'")
 
         user = cursor.fetchone()
 
@@ -93,7 +93,7 @@ def cer():
         cer = request.form['cernum']
         
         db = conn.cursor()
-        db.execute("SELECT cer_num FROM member WHERE cer_num = %s",(int(cer)))
+        db.execute("SELECT cer_num FROM usertbl WHERE cer_num = %s",(int(cer)))
         
         conn.commit()
         ret = db.fetchone()
@@ -131,7 +131,7 @@ def sign():
         server.quit()
 
         db = conn.cursor()
-        db.execute("INSERT INTO member (user_id,pw,nickname,cer_num) VALUES (%s,%s,%s,%s)",(email,password,name,int(num)))
+        db.execute("INSERT INTO usertbl (email,pw,nickname,cer_num) VALUES (%s,%s,%s,%s)",(email,password,name,int(num)))
         conn.commit()
         db.close()
 
