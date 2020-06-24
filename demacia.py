@@ -27,15 +27,32 @@ conn = pymysql.connect(host = 'school.mingky.me', user='team02', password='KIT',
 def index():
     return render_template("index.html")
 
-#@app.route('/pro', methods=['GET','POST'])
-#def pro():
-    #teer = ""
-   # if request.method == 'GET':
-       # return render_template("profile2.html")
-   # else:
-        #if request.form['top']:
-       #     switch request.form[a]:
-              #  case ''
+@app.route('/pro', methods=['GET','POST'])
+def pro():
+    
+    if request.method == 'GET':
+        return render_template("profile2.html")
+    else:
+        teer = request.form['teer']
+        line = request.form['line']
+        gender = request.form['gender']
+        mic = request.form['mic']
+        ptime = request.form['ptime']
+        pnickname = request.form['pnickname']
+
+        sql= """UPDATE member SET teer='%s', line='%s',gender= '%s',mic= '%s', playtime= '%s', pnickname= '%s'
+         WHERE user_id='%s' """ % (teer,line,gender,mic,ptime,pnickname,session['user'])
+          
+
+
+
+        db = conn.cursor()
+        print(session['user'])
+        db.execute(sql)
+        conn.commit()
+        db.close()
+        return render_template("index.html")
+            
             
 
 
@@ -46,11 +63,12 @@ def login():
         password = request.form['password'].encode('utf-8')
     
         cursor = conn.cursor()
-        cursor.execute("SELECT email FROM usertbl WHERE email = '"+email+"'")
+        cursor.execute("SELECT user_id FROM member WHERE user_id = '"+email+"'")
 
         user = cursor.fetchone()
 
-        if len(user) is 1:
+        if user != None:
+            session['user'] = email
             return render_template("index.html")
         else:
             return render_template("Login.html")
@@ -59,7 +77,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()
+    session.pop('user', None)
     return render_template("index.html")
 
 @app.route('/fin')
@@ -75,7 +93,7 @@ def cer():
         cer = request.form['cernum']
         
         db = conn.cursor()
-        db.execute("SELECT cer_num FROM usertbl WHERE cer_num = %s",(int(cer)))
+        db.execute("SELECT cer_num FROM member WHERE cer_num = %s",(int(cer)))
         
         conn.commit()
         ret = db.fetchone()
@@ -104,16 +122,16 @@ def sign():
         contents = "Certification Number is :{}".format(num)
         message = MIMEText(contents, _charset='euc-kr')
         message['Subject'] = "Demacia 인증번호"
-        message['From'] = 'seongbinpark0309@gmail.com'
+        message['From'] = 'evanpark333@gmail.com'
         message['To'] = email
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login("seongbinpark0309@gmail.com", "Kgb8220!")
-        server.sendmail("seongbinpark0309@gmail.com", email, message.as_string())
+        server.login("evanpark333@gmail.com", "seulhyun7070")
+        server.sendmail("evanpark333@gmail.com", email, message.as_string())
         server.quit()
 
         db = conn.cursor()
-        db.execute("INSERT INTO usertbl (email,pw,nickname,cer_num) VALUES (%s,%s,%s,%s)",(email,password,name,int(num)))
+        db.execute("INSERT INTO member (user_id,pw,nickname,cer_num) VALUES (%s,%s,%s,%s)",(email,password,name,int(num)))
         conn.commit()
         db.close()
 
