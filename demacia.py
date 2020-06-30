@@ -1,5 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, abort, session
-from flask_mysqldb import MySQL, MySQLdb
+from flask import Flask, request, render_template, redirect, url_for, abort, session,Blueprint, flash
 import bcrypt
 import pymysql
 from flask_mail import Mail, Message
@@ -8,6 +7,8 @@ import socket
 import smtplib
 import random
 from email.mime.text import MIMEText
+from flask import current_app as current_app
+
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'school.mingky.me'
@@ -18,14 +19,65 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 
 
-mysql = MySQL(app)
+
 conn = pymysql.connect(host = 'school.mingky.me', user='team02', password='KIT', db = 'team02', charset='utf8')
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def index():
-    return render_template("index.html")
+    if request.method == 'GET':
+        return render_template("index.html")
+    else:
+        return render_template("index.html")
+
+
+@app.route('/board_duo')
+def board_duo():
+    name2 = select_user3(session['user'])
+    name = select_user2(session['user'])
+    print(name[0])
+    return render_template("duo.html", data=name, data2=name2) #data2=name2)
+
+@app.route('/duo', methods=['GET','POST'])
+def duo():
+    if request.method == 'GET':
+        return render_template('matching.html')
+    else:
+        connectedUser = select_user2(session['user'])
+        title = request.form['title']
+        #line = request.form.get('matching_line_select1')
+        #teer = request.form['matching_line_select2']
+        #gender = request.form['matching_line_select3']
+        #mic = request.form['matching_line_select4']
+        content = request.form['content']
+        email = connectedUser[0] # 멤버에서 가져오기
+        user_name = connectedUser[1] # 멤버에서 가져오기
+        
+
+        #sql = "INSERT INTO qna (title, content, line, teer, gender, mic, created) \
+                #VALUE('%s', '%s', '%s', '%s', '%s', '%s', now())" % (title, content, line, teer, gender, mic)
+        sql = "INSERT INTO duo (title, content, user_name, email) \
+                VALUE('%s', '%s', '%s', '%s')" % (title, content, user_name, email)
+
+       
+
+       #sql="INSERT INTO duo (title, content, line, created, teer, gender, mic) VALUE(%s, %s, %s, now(), %s, %s,%s)",(title,content,line,teer,gender,mic)
+
+       # sql = "INSERT INTO qna (user_name, title, content, created, deleteflag, hit, email) \
+               # VALUE('%s', '%s', '%s', now(), %d, %d, '%s')" % (user_name, title, content, deleteflag, hit, email)
+        db = conn.cursor()
+        db.execute(sql)
+        conn.commit()
+        db.close()
+        
+        
+
+        return redirect(url_for('board_duo'))
+
+@app.route('/dema')
+def dema():
+    return render_template("index2.html")
 
 @app.route('/pro', methods=['GET','POST'])
 def pro():
@@ -40,8 +92,8 @@ def pro():
         ptime = request.form['ptime']
         pnickname = request.form['pnickname']
 
-        sql= """UPDATE usertbl SET teer='%s', line='%s',gender= '%s',mic= '%s', playtime= '%s', pnickname= '%s'
-         WHERE user_id='%s' """ % (teer,line,gender,mic,ptime,pnickname,session['user'])
+        sql= """UPDATE usertbl SET teer='%s', line='%s',gender= '%s',mic= '%s', ptime= '%s', pnickname= '%s'
+         WHERE email='%s' """ % (teer,line,gender,mic,ptime,pnickname,session['user'])
           
 
 
@@ -99,7 +151,12 @@ def cer():
         ret = db.fetchone()
         db.close()
         if len(ret) is 1:    
-            return render_template("Login.html")
+            return '''
+            <script>
+                alert("회원가입 완료 되었습니다.")
+                location.href="/login"
+            </script>
+          ''' 
         else:
             return render_template("Certification.html")
         
@@ -154,17 +211,108 @@ def sign():
     
         
         
-
-
+main = Blueprint('main', __name__, url_prefix='/')
 
 #@app.route('/confirm_email/<token>')
 #def confirm_email(token):
-    try:
-        email = s.loads(token, salt='email-confirm', max_age=3600)
-    except SignatureExpired:
-        return 'The token is expired!'
-    return 'The token works!'
+    
+def select_user2(id): 
+    ret = () 
+    setdata = (id,) 
+    db = conn.cursor()
+    db.execute('SELECT email,nickname,pnickname, teer, line, ptime, mic, gender FROM usertbl WHERE email = %s', (setdata)) 
+        
+    conn.commit()
+    ret = db.fetchone()
+    db.close()
+    return ret
 
+def select_user3(id): 
+    ret = () 
+    setdata = (id,) 
+    db = conn.cursor()
+    db.execute('SELECT user_name, title, content FROM duo WHERE email = %s', (setdata)) 
+        
+    conn.commit()
+    ret = db.fetchone()
+    db.close()
+    return ret
+
+@app.route('/board_qna', methods=['GET'])
+def board_qna():
+    if request.method == 'GET':
+        return render_template("board_qna.html")
+    else:
+        selet_results = {}
+
+        sql = "SELECT * \
+                    FROM team02.qna \
+                        WHERE deleteflag = 0"
+
+        db = conn.cursor()
+        selet_results = db.execute(sql)
+        conn.commit()
+        db.close()
+        
+        return render_template('/board_qna.html',
+                            selet_results=selet_results)
+
+@app.route('/board_qna_fwrite_page')
+def board_qna_fwrite_page():
+    return render_template('/board_qna_fwrite.html')
+
+@app.route('/fwrite', methods=['GET', 'POST'])
+def fwrite():
+    connectedUser = select_user2(session['user'])
+
+    email = connectedUser[0] # 멤버에서 가져오기
+    user_name = connectedUser[1] # 멤버에서 가져오기
+    title = request.form['title']
+    content = request.form['content']
+    deleteflag = 0
+    hit = 0
+    #lock_password = request.form['lock_password'] # 비밀번호추가
+    lock_password = ""
+    #attach = request.form['attach']
+    attach = ""
+
+    sql = "INSERT INTO qna (user_name, title, content, created, deleteflag, hit, email) \
+                VALUE('%s', '%s', '%s', now(), %d, %d, '%s')" % (user_name, title, content, deleteflag, hit, email)
+    db = conn.cursor()
+    db.execute(sql)
+    conn.commit()
+    db.close()
+
+    return redirect('/board_qna')
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    sql = "UPDATE team02.qna \
+                SET deleteflag = 1 \
+                WHERE `idx` = %s" % request.values.get('idx')
+
+    db = conn.cursor()
+    db.execute(sql)
+    conn.commit()
+    db.close()
+
+    return '''
+            <script>
+                alert("삭제되었습니다")
+                location.href="/board_qna"
+            </script>
+          ''' 
+
+
+
+
+
+
+
+
+
+
+   
 
 
 def random_num():

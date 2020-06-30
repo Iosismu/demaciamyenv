@@ -14,7 +14,9 @@
   <link href="static/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +27,7 @@
   <link href="static/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -54,11 +56,11 @@
 
       <h1 class="logo mr-auto"><a href="index.html">Demacia</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      <!-- <a href="index.html" class="logo mr-auto"><img src="static/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li class="active"><a href="index.html">메인</a></li>
+          <li class="active"><a href="{{ url_for('index')}}">메인</a></li>
 
           {% if 'user' in session %}
           <li><a href="{{ url_for('duo')}}">듀오 매칭</a></li>
@@ -66,11 +68,7 @@
           <li><a href="{{ url_for('login')}}">듀오 매칭</a></li>
           {% endif %}
           
-          {% if 'user' in session %}
-          <li><a href="{{ url_for('board_qna')}}">문의사항</a></li>
-          {% else %}
-          <li><a href="{{ url_for('login')}}">문의사항</a></li>
-          {% endif %}
+          <li><a href="{{ url_for('board_qna_fwrite_page')}}">문의사항</a></li>
 
           {% if 'user' in session %}
           <li><a href="{{ url_for('pro')}}">프로필 작성</a></li>
@@ -104,6 +102,73 @@
 
   <main id="main">
 
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+
+        <div class="section-title">
+          <span>커뮤니티</span>
+          <h2>커뮤니티</h2>
+        </div>
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">QnA</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card mt-2 gg-home-duorequest">
+          <div class="card-body">
+            <a a class="text-light" href="{{ url_for('.board_qna_fwrite_page') }}">게시글 작성</a>
+
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between flex-wrap mt-1">
+          {% for selet_result in selet_results %}
+          <!-- 목록 -->
+
+          <div class="card mt-2 gg-home-duorequest">
+            <div class="card-body">
+              <!-- 제목 -->
+              <div style="display: flex;">
+                {{selet_result.title}}
+                {% if selet_result.email == userSession %}
+                <form action="/delete" method="post" style="margin-left: auto;">
+                  <input type="hidden" class="form-control" name="idx" value="{{selet_result.idx}}">
+                  <button class="btn btn-link" type="submit">삭제</button>
+                </form>
+                {% endif %}
+              </div>
+              <hr style="margin-top: 0;" />
+              <!-- 내용 -->
+              <div style="min-height: 30px">
+                <p>{{selet_result.content}}</p>
+              </div>
+              <hr style="margin-bottom: 0;" />
+              <div class="d-flex align-items-center justify-content-between">
+                <!-- 날짜 -->
+                <div class="d-flex gg-sub-description">
+                  {{selet_result.created.strftime('%Y-%m-%d')}}
+                </div>
+                <div>
+                  <!-- 작성자 -->
+                  <a class="text-light" href="/kr/profile/{{selet_result.email}}">
+                    <!-- 유저 찾기 -->
+                    {{selet_result.user_name}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+    </section><!-- End Portfolio Section -->
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -132,10 +197,10 @@
           <div class="col-lg-2 col-md-6 footer-links">
             <h4>Main Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="duo.html">듀오매칭</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="item.html">아이템 거래소</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="score.html">전적 검색</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="community.html">커뮤니티</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">듀오매칭</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">아이템 거래소</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">전적 검색</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">커뮤니티</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="https://www.op.gg/">op.gg</a></li>
             </ul>
           </div>
@@ -167,13 +232,13 @@
       <div class="copyright">
         &copy; <strong><span>DEMACIA</span></strong>, 예시용 사이트
 
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/day-multipurpose-html-template-for-free/ -->
-        Designed by <a href="https://bootstrapmade.com/">DEMACIA</a>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/day-multipurpose-html-template-for-free/ -->
+          Designed by <a href="https://bootstrapmade.com/">DEMACIA</a>
+        </div>
       </div>
-    </div>
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>

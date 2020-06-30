@@ -7,7 +7,7 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <div id="fb-root"></div>
         <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v7.0&appId=726386558102918&autoLogAppEvents=1"></script>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style11.css') }}" type="text/css">
     </head>
     <body>
         
@@ -41,7 +41,7 @@
                 </div>
                 <input type="submit" class="logbtn" value="로그인">
                 <div class="bottom-text">
-                    아이디가 없으신가요? <a href="Signup.html">회원가입</a>
+                    아이디가 없으신가요? <a href="{{ url_for('sign')}}">회원가입</a>
                 </div>
             </form>
         </section>

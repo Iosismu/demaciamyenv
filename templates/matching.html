@@ -25,7 +25,7 @@
   <link href="static/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -60,11 +60,8 @@
         <ul>
           <li class="active"><a href="index.html">메인</a></li>
 
-          {% if 'user' in session %}
+          
           <li><a href="{{ url_for('duo')}}">듀오 매칭</a></li>
-          {% else %}
-          <li><a href="{{ url_for('login')}}">듀오 매칭</a></li>
-          {% endif %}
           
           {% if 'user' in session %}
           <li><a href="{{ url_for('board_qna')}}">문의사항</a></li>
@@ -102,12 +99,102 @@
     </div>
   </section><!-- End Hero -->
 
-  <main id="main">
+<!--Main layout-->
+<main class="mt-5 pt-5">
+    <div class="container">
 
-  </main><!-- End #main -->
+        <!--Section: Post-->
+        <section class="mt-4">
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+            <!--Grid row-->
+            <div class="row">
+
+                <!--Grid column-->
+                <div class="col-md-8 mb-4">
+
+
+
+                    <!--Card-->
+                    
+
+                        <!--Card content-->
+                       
+
+                  
+                    <!--/.Card-->
+
+
+                    
+                    <!--Card-->
+                    <form method="POST" action="/duo">
+
+                      <!-- Default input email -->
+                      
+                      <label for="defaultFormEmailEx" class="grey-text">제목</label>
+                      <input type="text" name="title" id="defaultFormLoginEmailEx" class="form-control">
+                      <br>
+                    <hr>
+                            <!-- Default input email -->
+                            <label for="defaultFormEmailEx" class="grey-text">내용</label>
+                            <input type="text" name="content" id="defaultFormLoginEmailEx" class="form-control">
+
+                            <br>
+
+
+                            <hr>
+
+                            <hr>
+
+                            
+                            <div class="text-center mt-4">
+                              <input type="submit" name='submit' value="등록"/>
+                              
+                          </div>
+                        </form>
+
+
+                        <!--Card content-->
+                        
+                        
+                        
+                        
+                        
+                       
+                        
+                        
+                        
+                        
+                        
+
+                    </div>
+                    <!--/.Card-->
+
+
+
+
+
+                  
+
+                 
+
+
+
+                </div>
+                <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Post-->
+
+    </div>
+</main>
+
+
+
+ <!-- ======= Footer ======= -->
+ <footer id="footer">
     <div class="footer-top">
       <div class="container">
         <div class="row">
@@ -132,11 +219,10 @@
           <div class="col-lg-2 col-md-6 footer-links">
             <h4>Main Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="duo.html">듀오매칭</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="item.html">아이템 거래소</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="score.html">전적 검색</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="community.html">커뮤니티</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="https://www.op.gg/">op.gg</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">듀오매칭</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">아이템 거래소</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">전적 검색</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">커뮤니티</a></li>
             </ul>
           </div>
 

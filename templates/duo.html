@@ -25,7 +25,7 @@
   <link href="static/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -60,11 +60,8 @@
         <ul>
           <li class="active"><a href="index.html">메인</a></li>
 
-          {% if 'user' in session %}
+          
           <li><a href="{{ url_for('duo')}}">듀오 매칭</a></li>
-          {% else %}
-          <li><a href="{{ url_for('login')}}">듀오 매칭</a></li>
-          {% endif %}
           
           {% if 'user' in session %}
           <li><a href="{{ url_for('board_qna')}}">문의사항</a></li>
@@ -102,12 +99,116 @@
     </div>
   </section><!-- End Hero -->
 
-  <main id="main">
+<!--Main layout-->
+<main class="mt-5 pt-5">
+    <div class="container">
 
-  </main><!-- End #main -->
+        <!--Section: Post-->
+        <section class="mt-4">
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+            <!--Grid row-->
+            <div class="row">
+
+                <!--Grid column-->
+                <div class="col-md-8 mb-4">
+
+
+                  <input type="button" value="글작성 " onclick="javascript:location.href='index.html'"/>
+                    <!--Card-->
+                    <div class="card mb-4 wow fadeIn">
+                      
+                        <div class="card-header font-weight-bold">
+                            <span>내 정보</span>
+
+                        </div>
+
+                        <!--Card content-->
+                        <div class="card-body">
+                          
+                    <form method="POST" action="/C:\Users\USER\Desktop\Demacia1\Demacia\op.gg.html">
+                          
+                      <div class="card-body">
+
+                        <div class="media d-block d-md-flex mt-3">
+                            <div class="media-body text-center text-md-left ml-md-3 ml-0">
+                                <h5 class="mt-0 font-weight-bold">제목: {{ data2[1] }}</h5>
+                                <p>LOL닉네임: {{ data[1]}}</p>
+                                {% if data[3] == '아이언' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/아이언.png" name = "iron"></strong>
+                                {% elif data[3] == '브론즈' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/브론즈.png" name = "bronze"></strong>
+                                {% elif data[3] == '실버' %}
+                                <strong>플레이어 정보: <img width= 70px src="static/실버.png" name = "silver"></strong>
+                                {% elif data[3] == '골드' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/골드.png" name = "gold"></strong>
+                                {% elif data[3] == '플레' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/플레.png" name = "ple"></strong>
+                                {% elif data[3] == '다이아' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/다이아.png" name = "di"></strong>
+                                {% elif data[3] == '마스터' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/마스터.png" name = "ma"></strong>
+                                {% elif data[3] == '그마' %}
+                                <strong>플레이어 정보: <img width= 90px src="static/골드.png" name = "gma"></strong>
+                                {% endif %}
+
+                                {% if data[4] == '탑' %}
+                                <strong><img width= 70px src="static/탑.png" name = "top"> </strong>
+                                {% elif data[4] == '정글' %}
+                                <strong> <img width= 90px src="static/정글.png" name = "jung"></strong>
+                                {% elif data[4] == '미드' %}
+                                <strong> <img width= 90px src="static/미드.png" name = "mid"></strong>
+                                {% elif data[4] == '원딜' %}
+                                <strong> <img width= 90px src="static/원딜.png" name = "AD"></strong>
+                                {% elif data[4] == '서폿' %}
+                                <strong> <img width= 90px src="static/서폿.png" name = "su"></strong>
+                                {% endif %}
+
+                                
+                                {% if data[6] == 'o' %}
+                                <strong><img width= 90px src="static/mic.png" name = "mic"> </strong>
+                                {% elif data[6] == 'x' %}
+                                <strong><img width= 70px src="static/nomic.png" name = "nomic"> </strong>
+                                {% endif %}
+                                
+                                {% if data[7] == '남' %}
+                                <strong><img width= 70px src="static/남자.png" name = "man"> </strong><br><br>
+                                {% elif data[7] == '여' %}
+                                <strong><img width= 70px src="static/여자.png" name = "woman"> </strong><br><br>
+                                {% endif %}
+                                <h5 class="mt-0 font-weight-bold">내용: {{ data2[2] }}</h5>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                  
+                    <!--/.Card-->
+
+
+
+
+
+                </div>
+                <!--Grid column-->
+
+            
+
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Post-->
+
+    </div>
+</main>
+
+
+
+ <!-- ======= Footer ======= -->
+ <footer id="footer">
     <div class="footer-top">
       <div class="container">
         <div class="row">
@@ -132,11 +233,10 @@
           <div class="col-lg-2 col-md-6 footer-links">
             <h4>Main Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="duo.html">듀오매칭</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="item.html">아이템 거래소</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="score.html">전적 검색</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="community.html">커뮤니티</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="https://www.op.gg/">op.gg</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">듀오매칭</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">아이템 거래소</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">전적 검색</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">커뮤니티</a></li>
             </ul>
           </div>
 
